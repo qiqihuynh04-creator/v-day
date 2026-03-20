@@ -1,103 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Have you fallen for Vee yet, Dchinh?</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Have you fallen for Vee yet, Dchinh?</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f7f4ef;
-      font-family: "Inter", sans-serif;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    .card {
-      text-align: center;
-    }
+<style>
+:root {
+  --bg-1: #f7f4ef;
+  --bg-2: #ece6dd;
+  --text-main: #1f1d1a;
+  --text-soft: #6e675f;
+  --line: rgba(60, 52, 43, 0.12);
+  --shadow: 0 20px 50px rgba(74, 61, 48, 0.12);
+}
 
-    button {
-      margin: 10px;
-      padding: 12px 24px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-    }
+* { box-sizing: border-box; }
 
-    #yesBtn {
-      background: black;
-      color: white;
-    }
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: "Inter", sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.9), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(212,196,177,0.55), transparent 25%),
+    linear-gradient(135deg, var(--bg-1), var(--bg-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    #noBtn {
-      position: absolute;
-      background: #ddd;
-    }
-  </style>
+.card {
+  width: min(720px, 100%);
+  padding: 56px 40px 80px;
+  border-radius: 32px;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 18px;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(42px, 6vw, 72px);
+}
+
+.sub {
+  margin-top: 16px;
+  color: var(--text-soft);
+}
+
+.divider {
+  width: 90px;
+  height: 1px;
+  background: rgba(80,68,53,0.3);
+  margin: 24px auto;
+}
+
+.button-wrap {
+  position: relative;
+  height: 260px;
+  margin-top: 20px;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 16px 30px;
+  font-size: 15px;
+  transition: 0.25s;
+}
+
+#yesBtn {
+  position: absolute;
+  left: calc(50% - 150px);
+  background: #1f1d1a;
+  color: white;
+}
+
+#noBtn {
+  position: absolute;
+  left: calc(50% + 20px);
+  background: #ede7df;
+}
+
+.note {
+  font-size: 12px;
+  color: #8a8178;
+  margin-top: 10px;
+}
+
+.music-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 14px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #f3eee7;
+  text-decoration: none;
+  color: #5f564d;
+}
+
+.floating {
+  position: absolute;
+  animation: float 4s linear forwards;
+}
+
+@keyframes float {
+  0% { opacity: 0; transform: translateY(20px); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-150px); }
+}
+</style>
 </head>
+
 <body>
 
 <div class="card" id="card">
-  <h1>Have you fallen for Vee yet, Dchinh?</h1>
+
+<div class="eyebrow">A small question</div>
+
+<h1>Have you fallen for Vee yet, Dchinh?</h1>
+<p class="sub">Be honest. I can already tell.</p>
+
+<div class="divider"></div>
+
+<div class="button-wrap">
   <button id="yesBtn">Okay... maybe</button>
   <button id="noBtn">No</button>
 </div>
 
-<!-- YOUTUBE ẨN -->
-<div id="player" style="display:none;"></div>
+<div class="note">Choose carefully. This might define everything.</div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
+<a class="music-link" href="https://www.youtube.com/watch?v=GxldQ9eX2wo" target="_blank">
+Play “Until I Found You”
+</a>
+
+</div>
 
 <script>
-let player;
-let musicStarted = false;
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const card = document.getElementById("card");
 
-// Load YouTube player
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player("player", {
-    height: "1",
-    width: "1",
-    videoId: "GxldQ9eX2wo", // Until I Found You
-    playerVars: {
-      autoplay: 0,
-      controls: 0,
-      mute: 0
-    }
-  });
+const noMessages = [
+  "Are you sure?",
+  "Really sure?",
+  "That seems unlikely.",
+  "Try that again."
+];
+
+let index = 0;
+let scale = 1;
+
+function moveNo() {
+  if (index < noMessages.length) {
+    noBtn.innerText = noMessages[index];
+  }
+
+  index++;
+
+  noBtn.style.left = Math.random() * 70 + "vw";
+  noBtn.style.top = Math.random() * 70 + "vh";
+
+  scale += 0.1;
+  yesBtn.style.transform = `scale(${scale})`;
 }
 
-// CLICK BẤT KỲ → PHÁT NHẠC
-document.addEventListener("click", () => {
-  if (!musicStarted && player) {
-    player.playVideo();
-    musicStarted = true;
-  }
-}, { once: true });
-
-// NO chạy
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-
-noBtn.addEventListener("mouseover", () => {
-  noBtn.style.top = Math.random() * window.innerHeight + "px";
-  noBtn.style.left = Math.random() * window.innerWidth + "px";
-
-  yesBtn.style.transform = "scale(1.2)";
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  moveNo();
 });
 
-// YES
 yesBtn.addEventListener("click", () => {
-  document.getElementById("card").innerHTML = `
-    <h1>I knew it.</h1>
+  card.innerHTML = `
+    <h1 style="font-size:60px;">I knew it.</h1>
+    <p>Took you long enough.</p>
+    <a class="music-link" href="https://www.youtube.com/watch?v=GxldQ9eX2wo" target="_blank">
+    Play the song
+    </a>
   `;
+
+  setInterval(() => {
+    const el = document.createElement("div");
+    el.className = "floating";
+    el.innerText = ["♡","✦","✧"][Math.floor(Math.random()*3)];
+    el.style.left = Math.random()*100 + "vw";
+    el.style.fontSize = "20px";
+    document.body.appendChild(el);
+
+    setTimeout(()=>el.remove(),4000);
+  },200);
 });
 </script>
 
