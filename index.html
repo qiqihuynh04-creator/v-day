@@ -16,15 +16,11 @@
       --card: rgba(255, 255, 255, 0.60);
       --text-main: #1f1d1a;
       --text-soft: #6e675f;
-      --accent: #8b7355;
-      --accent-dark: #6f5d47;
       --line: rgba(60, 52, 43, 0.12);
       --shadow: 0 20px 50px rgba(74, 61, 48, 0.12);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -43,25 +39,13 @@
       position: relative;
     }
 
-    .grain {
-      position: absolute;
-      inset: 0;
-      opacity: 0.05;
-      pointer-events: none;
-      background-image:
-        linear-gradient(0deg, transparent 24%, rgba(0,0,0,.04) 25%, rgba(0,0,0,.04) 26%, transparent 27%, transparent 74%, rgba(0,0,0,.04) 75%, rgba(0,0,0,.04) 76%, transparent 77%, transparent),
-        linear-gradient(90deg, transparent 24%, rgba(0,0,0,.04) 25%, rgba(0,0,0,.04) 26%, transparent 27%, transparent 74%, rgba(0,0,0,.04) 75%, rgba(0,0,0,.04) 76%, transparent 77%, transparent);
-      background-size: 14px 14px;
-    }
-
     .card {
       width: min(720px, 100%);
       padding: 56px 40px 80px;
       border: 1px solid var(--line);
       border-radius: 32px;
-      background: var(--card);
+      background: rgba(255,255,255,0.6);
       backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
       box-shadow: var(--shadow);
       text-align: center;
       position: relative;
@@ -133,12 +117,6 @@
       z-index: 2;
     }
 
-    #yesBtn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 30px rgba(25, 22, 19, 0.16);
-      background: #141311;
-    }
-
     #noBtn {
       font-size: 15px;
       padding: 15px 28px;
@@ -149,10 +127,6 @@
       left: calc(50% + 110px);
       top: 0;
       z-index: 3;
-    }
-
-    #noBtn:hover {
-      background: #e5ddd3;
     }
 
     .note {
@@ -171,17 +145,9 @@
     }
 
     @keyframes driftUp {
-      0% {
-        opacity: 0;
-        transform: translateY(18px) scale(0.9);
-      }
-      12% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-140px) scale(1.15);
-      }
+      0% { opacity: 0; transform: translateY(18px) scale(0.9); }
+      12% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-140px) scale(1.15); }
     }
 
     .final-screen {
@@ -202,14 +168,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     #yt-player-wrap {
@@ -221,39 +181,16 @@
       opacity: 0;
       pointer-events: none;
     }
-
-    @media (max-width: 640px) {
-      .card {
-        padding: 42px 22px 70px;
-        border-radius: 24px;
-      }
-
-      .button-wrap {
-        height: 280px;
-      }
-
-      #yesBtn {
-        padding: 15px 28px;
-      }
-
-      #noBtn {
-        left: calc(50% + 70px);
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="grain"></div>
-
   <main class="card" id="card">
     <div class="eyebrow">A small question</div>
     <h1>Have you fallen for Vee yet, Dchinh?</h1>
     <div class="divider"></div>
-    <p class="sub">
-      You can be honest. I made this very simple on purpose.
-    </p>
+    <p class="sub">You can be honest. I made this very simple on purpose.</p>
 
-    <div class="button-wrap" id="buttonWrap">
+    <div class="button-wrap">
       <button id="yesBtn">Yes, maybe I have</button>
       <button id="noBtn">No, not yet</button>
     </div>
@@ -261,9 +198,7 @@
     <div class="note">Choose carefully.</div>
   </main>
 
-  <div id="yt-player-wrap">
-    <div id="player"></div>
-  </div>
+  <div id="yt-player-wrap"><div id="player"></div></div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
@@ -284,7 +219,7 @@
     let playerReady = false;
     let musicStarted = false;
 
-    function onYouTubeIframeAPIReady() {
+    window.onYouTubeIframeAPIReady = function () {
       player = new YT.Player("player", {
         height: "1",
         width: "1",
@@ -296,8 +231,7 @@
           fs: 0,
           modestbranding: 1,
           playsinline: 1,
-          rel: 0,
-          start: 0
+          rel: 0
         },
         events: {
           onReady: function () {
@@ -305,7 +239,7 @@
           }
         }
       });
-    }
+    };
 
     function startMusic() {
       if (playerReady && !musicStarted) {
@@ -314,15 +248,11 @@
       }
     }
 
-    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-
     document.addEventListener("click", startMusic, { once: true });
 
     function moveNoButton() {
       if (noIndex < noMessages.length) {
         noBtn.textContent = noMessages[noIndex];
-      } else {
-        noBtn.textContent = noMessages[noMessages.length - 1];
       }
       noIndex++;
 
@@ -373,10 +303,7 @@
         el.style.top = 70 + Math.random() * 25 + "vh";
         el.style.fontSize = (14 + Math.random() * 18) + "px";
         document.body.appendChild(el);
-
-        setTimeout(() => {
-          el.remove();
-        }, 4800);
+        setTimeout(() => el.remove(), 4800);
       }, 220);
     }
   </script>
