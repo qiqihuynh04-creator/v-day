@@ -18,9 +18,14 @@
       --text-soft: #6e675f;
       --line: rgba(60, 52, 43, 0.12);
       --shadow: 0 20px 50px rgba(74, 61, 48, 0.12);
+      --accent-dark: #1f1d1a;
+      --accent-light: #ede7df;
+      --accent-light-hover: #e5ddd3;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -46,6 +51,7 @@
       border-radius: 32px;
       background: rgba(255,255,255,0.6);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       box-shadow: var(--shadow);
       text-align: center;
       position: relative;
@@ -88,12 +94,11 @@
     .button-wrap {
       position: relative;
       width: 100%;
-      height: 250px;
-      margin-top: 12px;
+      height: 260px;
+      margin-top: 18px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      gap: 18px;
     }
 
     button {
@@ -111,22 +116,34 @@
     #yesBtn {
       font-size: 16px;
       padding: 16px 34px;
-      background: #1f1d1a;
+      background: var(--accent-dark);
       color: #f8f5ef;
-      position: relative;
+      position: absolute;
+      left: calc(50% - 150px);
+      top: 0;
       z-index: 2;
+    }
+
+    #yesBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(25, 22, 19, 0.16);
+      background: #141311;
     }
 
     #noBtn {
       font-size: 15px;
       padding: 15px 28px;
-      background: #ede7df;
+      background: var(--accent-light);
       color: #4f473f;
       border: 1px solid rgba(79, 71, 63, 0.08);
       position: absolute;
-      left: calc(50% + 110px);
+      left: calc(50% + 20px);
       top: 0;
       z-index: 3;
+    }
+
+    #noBtn:hover {
+      background: var(--accent-light-hover);
     }
 
     .note {
@@ -134,6 +151,24 @@
       font-size: 12px;
       color: #8a8178;
       letter-spacing: 0.03em;
+    }
+
+    .music-link {
+      display: inline-block;
+      margin-top: 16px;
+      text-decoration: none;
+      color: #5f564d;
+      font-size: 14px;
+      border: 1px solid rgba(79, 71, 63, 0.12);
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: #f3eee7;
+      transition: all 0.25s ease;
+    }
+
+    .music-link:hover {
+      background: #e9e1d7;
+      color: #2a2621;
     }
 
     .floating {
@@ -145,9 +180,17 @@
     }
 
     @keyframes driftUp {
-      0% { opacity: 0; transform: translateY(18px) scale(0.9); }
-      12% { opacity: 1; }
-      100% { opacity: 0; transform: translateY(-140px) scale(1.15); }
+      0% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.9);
+      }
+      12% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-140px) scale(1.15);
+      }
     }
 
     .final-screen {
@@ -168,18 +211,34 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    #yt-player-wrap {
-      position: fixed;
-      width: 1px;
-      height: 1px;
-      left: -9999px;
-      top: -9999px;
-      opacity: 0;
-      pointer-events: none;
+    @media (max-width: 640px) {
+      .card {
+        padding: 42px 22px 70px;
+        border-radius: 24px;
+      }
+
+      .button-wrap {
+        height: 300px;
+      }
+
+      #yesBtn {
+        left: calc(50% - 120px);
+        padding: 15px 28px;
+      }
+
+      #noBtn {
+        left: calc(50% + 10px);
+      }
     }
   </style>
 </head>
@@ -188,7 +247,9 @@
     <div class="eyebrow">A small question</div>
     <h1>Have you fallen for Vee yet, Dchinh?</h1>
     <div class="divider"></div>
-    <p class="sub">You can be honest. I made this very simple on purpose.</p>
+    <p class="sub">
+      You can be honest. I made this very simple on purpose.
+    </p>
 
     <div class="button-wrap">
       <button id="yesBtn">Yes, maybe I have</button>
@@ -196,11 +257,17 @@
     </div>
 
     <div class="note">Choose carefully.</div>
+
+    <a
+      class="music-link"
+      href="https://www.youtube.com/watch?v=GxldQ9eX2wo"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Play “Until I Found You”
+    </a>
   </main>
 
-  <div id="yt-player-wrap"><div id="player"></div></div>
-
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
@@ -215,44 +282,12 @@
 
     let noIndex = 0;
     let yesScale = 1;
-    let player;
-    let playerReady = false;
-    let musicStarted = false;
-
-    window.onYouTubeIframeAPIReady = function () {
-      player = new YT.Player("player", {
-        height: "1",
-        width: "1",
-        videoId: "GxldQ9eX2wo",
-        playerVars: {
-          autoplay: 0,
-          controls: 0,
-          disablekb: 1,
-          fs: 0,
-          modestbranding: 1,
-          playsinline: 1,
-          rel: 0
-        },
-        events: {
-          onReady: function () {
-            playerReady = true;
-          }
-        }
-      });
-    };
-
-    function startMusic() {
-      if (playerReady && !musicStarted) {
-        player.playVideo();
-        musicStarted = true;
-      }
-    }
-
-    document.addEventListener("click", startMusic, { once: true });
 
     function moveNoButton() {
       if (noIndex < noMessages.length) {
         noBtn.textContent = noMessages[noIndex];
+      } else {
+        noBtn.textContent = noMessages[noMessages.length - 1];
       }
       noIndex++;
 
@@ -261,7 +296,7 @@
       const maxY = window.innerHeight - noBtn.offsetHeight - padding * 2;
 
       const x = Math.random() * Math.max(140, maxX);
-      const y = 110 + Math.random() * Math.max(140, maxY - 180);
+      const y = 120 + Math.random() * Math.max(140, maxY - 200);
 
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
@@ -270,24 +305,27 @@
       yesBtn.style.transform = `scale(${yesScale})`;
     }
 
-    noBtn.addEventListener("mouseenter", () => {
-      startMusic();
-      moveNoButton();
-    });
+    noBtn.addEventListener("mouseenter", moveNoButton);
 
     noBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      startMusic();
       moveNoButton();
     });
 
     yesBtn.addEventListener("click", () => {
-      startMusic();
       card.innerHTML = `
         <div class="final-screen">
           <div class="eyebrow">I thought so</div>
           <h1>I knew it.</h1>
           <p>That was the right answer.</p>
+          <a
+            class="music-link"
+            href="https://www.youtube.com/watch?v=GxldQ9eX2wo"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Play “Until I Found You”
+          </a>
         </div>
       `;
       createFloating();
@@ -303,7 +341,10 @@
         el.style.top = 70 + Math.random() * 25 + "vh";
         el.style.fontSize = (14 + Math.random() * 18) + "px";
         document.body.appendChild(el);
-        setTimeout(() => el.remove(), 4800);
+
+        setTimeout(() => {
+          el.remove();
+        }, 4800);
       }, 220);
     }
   </script>
