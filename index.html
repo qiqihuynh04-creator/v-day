@@ -1,362 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Have you fallen for Vee yet, Dchinh?</title>
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const card = document.getElementById("card");
+const container = document.querySelector(".button-wrap");
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+const noMessages = [
+  "Are you sure?",
+  "Really sure?",
+  "That seems unlikely.",
+  "Try that again."
+];
 
-  <style>
-    :root {
-      --bg-1: #f7f4ef;
-      --bg-2: #ece6dd;
-      --text-main: #1f1d1a;
-      --text-soft: #6e675f;
-      --line: rgba(60, 52, 43, 0.12);
-      --shadow: 0 20px 50px rgba(74, 61, 48, 0.12);
-      --accent-dark: #1f1d1a;
-      --accent-light: #ede7df;
-      --accent-light-hover: #e5ddd3;
-    }
+let index = 0;
+let scale = 1;
 
-    * {
-      box-sizing: border-box;
-    }
+function moveNo() {
+  if (index < noMessages.length) {
+    noBtn.innerText = noMessages[index];
+  } else {
+    noBtn.innerText = noMessages[noMessages.length - 1];
+  }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      overflow: hidden;
-      color: var(--text-main);
-      font-family: "Inter", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.9), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(212, 196, 177, 0.55), transparent 25%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      position: relative;
-    }
+  index++;
 
-    .card {
-      width: min(720px, 100%);
-      padding: 56px 40px 80px;
-      border-radius: 32px;
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: var(--shadow);
-      text-align: center;
-      position: relative;
-      z-index: 2;
-      border: 1px solid var(--line);
-    }
+  const maxX = container.clientWidth - noBtn.offsetWidth;
+  const maxY = container.clientHeight - noBtn.offsetHeight;
 
-    .eyebrow {
-      display: inline-block;
-      font-size: 12px;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-      margin-bottom: 18px;
-    }
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
 
-    h1 {
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-weight: 600;
-      font-size: clamp(42px, 6vw, 72px);
-      line-height: 0.98;
-      letter-spacing: -0.02em;
-    }
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 
-    .sub {
-      margin: 18px auto 0;
-      max-width: 520px;
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text-soft);
-    }
+  scale += 0.12;
+  yesBtn.style.transform = `scale(${scale})`;
+}
 
-    .divider {
-      width: 92px;
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(80, 68, 53, 0.35), transparent);
-      margin: 28px auto 34px;
-    }
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  moveNo();
+});
 
-    .button-wrap {
-      position: relative;
-      width: 100%;
-      height: 280px;
-      margin-top: 18px;
-    }
-
-    button {
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        background 0.25s ease,
-        color 0.25s ease,
-        left 0.22s ease,
-        top 0.22s ease;
-      font-family: "Inter", sans-serif;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      box-shadow: 0 10px 24px rgba(45, 39, 32, 0.08);
-      white-space: nowrap;
-    }
-
-    #yesBtn {
-      position: absolute;
-      left: calc(50% - 150px);
-      top: 0;
-      font-size: 16px;
-      padding: 16px 34px;
-      background: var(--accent-dark);
-      color: #f8f5ef;
-      z-index: 2;
-    }
-
-    #yesBtn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 30px rgba(25, 22, 19, 0.16);
-      background: #141311;
-    }
-
-    #noBtn {
-      position: absolute;
-      left: calc(50% + 20px);
-      top: 0;
-      font-size: 15px;
-      padding: 15px 28px;
-      background: var(--accent-light);
-      color: #4f473f;
-      border: 1px solid rgba(79, 71, 63, 0.08);
-      z-index: 3;
-    }
-
-    #noBtn:hover {
-      background: var(--accent-light-hover);
-    }
-
-    .note {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #8a8178;
-      letter-spacing: 0.03em;
-    }
-
-    .music-link {
-      display: inline-block;
-      margin-top: 16px;
-      text-decoration: none;
-      color: #5f564d;
-      font-size: 14px;
-      border: 1px solid rgba(79, 71, 63, 0.12);
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: #f3eee7;
-      transition: all 0.25s ease;
-    }
-
-    .music-link:hover {
-      background: #e9e1d7;
-      color: #2a2621;
-    }
-
-    .floating {
-      position: absolute;
-      pointer-events: none;
-      font-size: 18px;
-      color: rgba(139, 115, 85, 0.22);
-      animation: driftUp 4.8s linear forwards;
-    }
-
-    @keyframes driftUp {
-      0% {
-        opacity: 0;
-        transform: translateY(18px) scale(0.9);
-      }
-      12% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-140px) scale(1.15);
-      }
-    }
-
-    .final-screen {
-      text-align: center;
-      animation: fadeIn 0.6s ease;
-    }
-
-    .final-screen h1 {
-      font-size: clamp(48px, 8vw, 96px);
-      margin-bottom: 12px;
-    }
-
-    .final-screen p {
-      margin: 0;
-      font-size: 16px;
-      color: var(--text-soft);
-      letter-spacing: 0.03em;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .card {
-        padding: 42px 22px 70px;
-        border-radius: 24px;
-      }
-
-      .button-wrap {
-        height: 320px;
-      }
-
-      #yesBtn {
-        left: calc(50% - 120px);
-        padding: 15px 28px;
-      }
-
-      #noBtn {
-        left: calc(50% + 10px);
-      }
-    }
-  </style>
-</head>
-<body>
-  <main class="card" id="card">
-    <div class="eyebrow">A small question</div>
-
-    <h1>Have you fallen for Vee yet, Dchinh?</h1>
-    <p class="sub">Be honest. I can already tell.</p>
-
-    <div class="divider"></div>
-
-    <div class="button-wrap">
-      <button id="yesBtn">Okay... maybe</button>
-      <button id="noBtn">No</button>
-    </div>
-
-    <div class="note">Choose carefully. This might define everything.</div>
-
-    <a
-      class="music-link"
-      href="https://www.youtube.com/watch?v=GxldQ9eX2wo"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Play “Until I Found You”
+yesBtn.addEventListener("click", () => {
+  card.innerHTML = `
+    <h1 style="font-size:60px;">I knew it.</h1>
+    <p>Took you long enough.</p>
+    <a class="music-link" href="https://www.youtube.com/watch?v=GxldQ9eX2wo" target="_blank">
+      Play the song
     </a>
-  </main>
+  `;
 
-  <script>
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const card = document.getElementById("card");
-    const container = document.querySelector(".button-wrap");
+  setInterval(() => {
+    const el = document.createElement("div");
+    el.className = "floating";
+    el.innerText = ["♡","✦","✧"][Math.floor(Math.random() * 3)];
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.fontSize = "20px";
+    document.body.appendChild(el);
 
-    const noMessages = [
-      "Are you sure?",
-      "Really sure?",
-      "That seems unlikely.",
-      "Try that again."
-    ];
-
-    let index = 0;
-    let scale = 1;
-
-    function moveNo() {
-      if (index < noMessages.length) {
-        noBtn.innerText = noMessages[index];
-      } else {
-        noBtn.innerText = noMessages[noMessages.length - 1];
-      }
-
-      index++;
-
-      const maxX = Math.max(0, container.clientWidth - noBtn.offsetWidth);
-      const maxY = Math.max(0, container.clientHeight - noBtn.offsetHeight);
-
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
-
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-
-      scale += 0.12;
-      yesBtn.style.transform = `scale(${scale})`;
-    }
-
-    noBtn.addEventListener("mouseover", moveNo);
-    noBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      moveNo();
-    });
-
-    yesBtn.addEventListener("click", () => {
-      card.innerHTML = `
-        <div class="final-screen">
-          <div class="eyebrow">I thought so</div>
-          <h1>I knew it.</h1>
-          <p>Took you long enough.</p>
-          <a
-            class="music-link"
-            href="https://forms.gle/PUT-YOUR-GOOGLE-FORM-LINK-HERE"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            One more click for me
-          </a>
-          <br />
-          <a
-            class="music-link"
-            href="https://www.youtube.com/watch?v=GxldQ9eX2wo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Play “Until I Found You”
-          </a>
-        </div>
-      `;
-
-      createFloating();
-    });
-
-    function createFloating() {
-      const symbols = ["♡", "✦", "✧", "☾"];
-      setInterval(() => {
-        const el = document.createElement("div");
-        el.className = "floating";
-        el.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-        el.style.left = Math.random() * 100 + "vw";
-        el.style.top = 70 + Math.random() * 25 + "vh";
-        el.style.fontSize = (16 + Math.random() * 10) + "px";
-        document.body.appendChild(el);
-
-        setTimeout(() => el.remove(), 4800);
-      }, 220);
-    }
-  </script>
-</body>
-</html>
+    setTimeout(() => el.remove(), 4000);
+  }, 200);
+});
+</script>
