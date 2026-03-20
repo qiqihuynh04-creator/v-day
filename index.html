@@ -1,114 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Have You Fallen for Vee Yet, Dchinh? 💓</title>
 
-<title>Have You Fallen for Vee Yet, Dchinh? 💓</title>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #ffd6e0, #ffe6eb);
+      text-align: center;
+      font-family: "Comic Sans MS", cursive;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
 
-<style>
-body {
-    background: linear-gradient(to bottom, #ffd6e0, #ffe6eb);
-    text-align: center;
-    font-family: "Comic Sans MS", cursive;
-    margin: 0;
-    height: 100vh;
-    overflow: hidden;
-}
+    h1 {
+      margin-top: 80px;
+      font-size: 36px;
+      color: #ff4d6d;
+    }
 
-h1 {
-    margin-top: 80px;
-    font-size: 36px;
-    color: #ff4d6d;
-}
+    .buttons {
+      margin-top: 30px;
+      position: relative;
+      height: 220px;
+    }
 
-button {
-    padding: 14px 30px;
-    font-size: 18px;
-    margin: 15px;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: 0.3s;
-}
+    button {
+      padding: 14px 30px;
+      font-size: 18px;
+      margin: 15px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
 
-#yesBtn {
-    background: #4CAF50;
-    color: white;
-}
+    #yesBtn {
+      background: #4CAF50;
+      color: white;
+    }
 
-#noBtn {
-    background: #ff4d6d;
-    color: white;
-    position: absolute;
-}
+    #noBtn {
+      background: #ff4d6d;
+      color: white;
+      position: absolute;
+      left: 55%;
+      top: 20px;
+    }
 
-.heart {
-    position: absolute;
-    color: #ff4d6d;
-    animation: float 4s linear infinite;
-}
+    .heart {
+      position: absolute;
+      color: #ff4d6d;
+      pointer-events: none;
+      animation: float 4s linear forwards;
+    }
 
-@keyframes float {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-100vh); opacity: 0; }
-}
-</style>
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <h1>Have You Fallen for Vee Yet, Dchinh? 💓</h1>
 
-<h1>Have You Fallen for Vee Yet, Dchinh? 💓</h1>
+  <div class="buttons">
+    <button id="yesBtn">Yes 😍</button>
+    <button id="noBtn">No 😢</button>
+  </div>
 
-<button id="yesBtn">Yes 😍</button>
-<button id="noBtn">No 😢</button>
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
+  </audio>
 
-<!-- 🎵 NHẠC -->
-<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const music = document.getElementById("bgMusic");
 
-<script>
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const music = document.getElementById("bgMusic");
+    let musicStarted = false;
 
-// chạy nhạc khi click bất kỳ đâu
-document.body.addEventListener("click", () => {
-    music.play();
-}, { once: true });
+    function startMusic() {
+      if (!musicStarted) {
+        music.play().then(() => {
+          musicStarted = true;
+        }).catch(() => {});
+      }
+    }
 
-// nút No chạy trốn
-noBtn.addEventListener("mouseover", () => {
-    noBtn.style.top = Math.random() * 80 + "vh";
-    noBtn.style.left = Math.random() * 80 + "vw";
-});
+    document.addEventListener("click", startMusic, { once: true });
 
-// khi bấm Yes
-yesBtn.addEventListener("click", () => {
-    document.body.innerHTML = `
-    <h1 style="margin-top:120px; font-size:52px; color:#ff4d6d;">
-        I KNEW IT 😍💖
-    </h1>
-    `;
-    createHearts();
-});
+    let noMessages = [
+      "Are you sure? 🥺",
+      "Really sure? 😢",
+      "Think again 💭",
+      "Don’t do this 💔",
+      "Pleaseeee 😭",
+      "Last chance 😳"
+    ];
 
-// tạo tim bay
-function createHearts() {
-    setInterval(() => {
+    let msgIndex = 0;
+    let yesScale = 1;
+
+    noBtn.addEventListener("mouseover", () => {
+      noBtn.textContent = noMessages[msgIndex % noMessages.length];
+      msgIndex++;
+
+      const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+      const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * Math.max(maxY, 200);
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
+      yesScale += 0.08;
+      yesBtn.style.transform = `scale(${yesScale})`;
+    });
+
+    yesBtn.addEventListener("click", () => {
+      startMusic();
+
+      document.body.innerHTML = `
+        <h1 style="margin-top:120px; font-size:52px; color:#ff4d6d;">
+          I KNEW IT 😍💖
+        </h1>
+      `;
+
+      createHearts();
+    });
+
+    function createHearts() {
+      setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.innerHTML = "💖";
         heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = Math.random() * 100 + "vh";
         heart.style.fontSize = (Math.random() * 20 + 18) + "px";
-
         document.body.appendChild(heart);
 
         setTimeout(() => {
-            heart.remove();
+          heart.remove();
         }, 4000);
-    }, 200);
-}
-</script>
-
+      }, 180);
+    }
+  </script>
 </body>
 </html>
