@@ -270,11 +270,16 @@
     </a>
   </main>
 
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const card = document.getElementById("card");
     const container = document.querySelector(".button-wrap");
+    const music = document.getElementById("bgMusic");
 
     const noMessages = [
       "Are you sure?",
@@ -285,6 +290,14 @@
 
     let index = 0;
     let scale = 1;
+    let musicStarted = false;
+
+    document.addEventListener("click", () => {
+      if (!musicStarted) {
+        music.play().catch(() => {});
+        musicStarted = true;
+      }
+    }, { once: true });
 
     function moveNo() {
       if (index < noMessages.length) {
